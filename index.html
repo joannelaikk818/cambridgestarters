@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starters Spelling Fun</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --bg: #F0F9FF;
+            --text: #2F3E46;
+            --error: #FF4D4D;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+            user-select: none;
+        }
+
+        #status-bar {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 #ddd;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        #menu-screen {
+            padding: 40px 20px;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .cat-btn {
+            padding: 20px 10px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 6px 0 #ddd;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .cat-btn:hover { background: var(--accent); transform: translateY(-2px); }
+        .cat-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #ddd; }
+
+        #game-screen {
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .emoji-display {
+            font-size: 100px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .slots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .slot {
+            width: 45px;
+            height: 55px;
+            border-bottom: 5px solid #cbd5e1;
+            font-size: 34px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .letters-pool {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .letter-tile {
+            width: 55px;
+            height: 55px;
+            background: white;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #ddd;
+            transition: all 0.1s;
+        }
+
+        .wrong {
+            border-color: var(--error) !important;
+            animation: shake 0.3s ease-in-out;
+            color: var(--error);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .hidden-tile {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.5);
+        }
+
+        #over-screen {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .big-score { font-size: 5rem; color: var(--primary); margin: 20px 0; text-shadow: 3px 3px #fff; }
+    </style>
+</head>
+<body>
+
+    <div id="status-bar">
+        <div class="stat-box">⏳ <span id="timer">02:00</span></div>
+        <div class="stat-box">⭐ Score: <span id="score">0</span></div>
+    </div>
+
+    <div id="menu-screen">
+        <h1 style="color: var(--primary); font-size: 2.5rem;">Spelling Starters 🐾</h1>
+        <p>You have 2 minutes! Choose a topic:</p>
+        <div class="category-grid" id="category-grid"></div>
+    </div>
+
+    <div id="game-screen">
+        <div class="emoji-display" id="emoji-hint"></div>
+        <div class="slots" id="slots"></div>
+        <div class="letters-pool" id="pool"></div>
+    </div>
+
+    <div id="over-screen">
+        <h1>Time's Up! 🏁</h1>
+        <p>Your Final Score:</p>
+        <div class="big-score" id="final-score">0</div>
+        <button class="cat-btn" onclick="location.reload()" style="background: var(--secondary); color: white; padding: 15px 50px;">Play Again</button>
+    </div>
+
+    <script>
+        const vocabulary = {
+            "Animals": { words: "Dog,Cat,Bird,Fish,Frog,Hippo,Lion,Tiger,Snake,Duck,Bear,Bee,Cow,Goat,Horse,Mouse,Sheep,Spider,Whale", emoji: { "Dog":"🐶","Cat":"🐱","Bird":"🐦","Fish":"🐟","Frog":"🐸","Hippo":"🦛","Lion":"🦁","Tiger":"🐯","Snake":"🐍","Duck":"🦆","Bear":"🐻","Bee":"🐝","Cow":"🐮","Goat":"🐐","Horse":"🐴","Mouse":"🐭","Sheep":"🐑","Spider":"🕷️","Whale":"🐳"} },
+            "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"🦵","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
+            "Clothes": { words: "Bag,Coat,Dress,Hat,Jacket,Jeans,Shoes,Skirt,Socks,Watch", emoji: {"Bag":"👜","Coat":"🧥","Dress":"👗","Hat":"👒","Jacket":"🧥","Jeans":"👖","Shoes":"👞","Skirt":"👗","Socks":"🧦","Watch":"⌚"} },
+            "Food": { words: "Apple,Banana,Bread,Burger,Cake,Candy,Carrot,Cheese,Egg,Grape,Juice,Lemon,Milk,Pear,Pizza,Potato,Rice,Soup,Tomato,Water", emoji: {"Apple":"🍎","Banana":"🍌","Bread":"🍞","Burger":"🍔","Cake":"🍰","Candy":"🍬","Carrot":"🥕","Cheese":"🧀","Egg":"🥚","Grape":"🍇","Juice":"🧃","Lemon":"🍋","Milk":"🥛","Pear":"🍐","Pizza":"🍕","Potato":"🥔","Rice":"🍚","Soup":"🥣","Tomato":"🍅","Water":"💧"} },
+            "Nature": { words: "Beach,Cloud,Farm,Flower,Leaf,Moon,Mountain,Rain,River,Sea,Sky,Star,Sun,Tree", emoji: {"Beach":"🏖️","Cloud":"☁️","Farm":"🚜","Flower":"🌸","Leaf":"🍃","Moon":"🌙","Mountain":"⛰️","Rain":"🌧️","River":"🏞️","Sea":"🌊","Sky":"🌌","Star":"⭐","Sun":"☀️","Tree":"🌳"} },
+            "Transport": { words: "Bike,Boat,Bus,Car,Plane,Train,Truck", emoji: {"Bike":"🚲","Boat":"⛵","Bus":"🚌","Car":"🚗","Plane":"✈️","Train":"🚆","Truck":"🚚"} },
+            "School": { words: "Book,Class,Desk,Eraser,Pen,Pencil,Picture,Ruler", emoji: {"Book":"📖","Class":"🏫","Desk":"🪑","Eraser":"🧼","Pen":"🖊️","Pencil":"✏️","Picture":"🖼️","Ruler":"📏"} }
+        };
+
+        let score = 0;
+        let timeLeft = 120;
+        let timerInterval;
+        let currentCategory = "";
+        let currentWord = "";
+        let charIndex = 0;
+        let recentWords = []; // 记录最近5个单词
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playTone(f, d) {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.frequency.value = f;
+            g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + d);
+        }
+
+        function setup() {
+            const grid = document.getElementById('category-grid');
+            Object.keys(vocabulary).forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn';
+                btn.innerText = cat;
+                btn.onclick = () => startGame(cat);
+                grid.appendChild(btn);
+            });
+        }
+
+        function startGame(cat) {
+            currentCategory = cat;
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('status-bar').style.display = 'flex';
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if(timeLeft <= 0) endGame();
+            }, 1000);
+            
+            nextWord();
+        }
+
+        function nextWord() {
+            const catData = vocabulary[currentCategory];
+            const words = catData.words.split(',');
+            
+            // 挑选单词逻辑：避开最近5个单词
+            let availableWords = words.filter(w => !recentWords.includes(w.trim().toUpperCase()));
+            
+            // 如果所有单词都刚刚出现过（极端情况），则重置记录
+            if (availableWords.length === 0) {
+                recentWords = [];
+                availableWords = words;
+            }
+
+            let selected = availableWords[Math.floor(Math.random() * availableWords.length)].trim().toUpperCase();
+            currentWord = selected;
+
+            // 更新最近记录
+            recentWords.push(currentWord);
+            if (recentWords.length > 5) {
+                recentWords.shift(); // 保持队列长度为5
+            }
+
+            charIndex = 0;
+            document.getElementById('emoji-hint').innerText = catData.emoji[currentWord[0] + currentWord.slice(1).toLowerCase()] || "❓";
+            
+            const slots = document.getElementById('slots');
+            slots.innerHTML = '';
+            for(let i=0; i<currentWord.length; i++) {
+                const s = document.createElement('div');
+                s.className = 'slot';
+                s.id = 's-' + i;
+                slots.appendChild(s);
+            }
+
+            const pool = document.getElementById('pool');
+            pool.innerHTML = '';
+            let letters = currentWord.split('').sort(() => Math.random() - 0.5);
+            letters.forEach(l => {
+                const tile = document.createElement('div');
+                tile.className = 'letter-tile';
+                tile.innerText = l;
+                tile.onclick = () => {
+                    if(l === currentWord[charIndex]) {
+                        document.getElementById('s-' + charIndex).innerText = l;
+                        tile.classList.add('hidden-tile');
+                        charIndex++;
+                        playTone(600, 0.1);
+                        if(charIndex === currentWord.length) {
+                            score += 1; // 1分1题
+                            document.getElementById('score').innerText = score;
+                            playTone(900, 0.2);
+                            setTimeout(nextWord, 600);
+                        }
+                    } else {
+                        playTone(150, 0.2);
+                        tile.classList.add('wrong');
+                        setTimeout(() => tile.classList.remove('wrong'), 400);
+                    }
+                };
+                pool.appendChild(tile);
+            });
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('status-bar').style.display = 'none';
+            document.getElementById('over-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+        }
+
+        setup();
+    </script>
+</body>
+</html>
