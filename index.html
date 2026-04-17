@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starters Spelling Fun</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary: #FF6B6B;
@@ -18,7 +15,8 @@
         }
 
         body {
-            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            /* 修正 iPhone 字型問題，優先使用 Chalkboard SE 或系統圓體 */
+            font-family: 'Chalkboard SE', 'Quicksand', 'Comic Sans MS', cursive, sans-serif;
             background-color: var(--bg);
             margin: 0;
             display: flex;
@@ -29,8 +27,9 @@
             user-select: none;
         }
 
-        button, .cat-btn, .letter-tile, .slot {
-            font-family: 'Quicksand', sans-serif;
+        /* 確保所有按鈕不會跑掉 */
+        button {
+            font-family: inherit;
         }
 
         #status-bar {
@@ -84,6 +83,7 @@
             width: 90%;
             max-width: 600px;
             text-align: center;
+            padding-top: 20px;
         }
 
         .emoji-display {
@@ -181,22 +181,28 @@
     </div>
 
     <div id="game-screen">
+        <button class="cat-btn" onclick="quitGame()" style="background: var(--error); color: white; padding: 10px 20px; font-size: 0.9rem; margin-bottom: 15px; box-shadow: 0 4px 0 #b33; min-width: 120px;">
+            Quit & Score 🚩
+        </button>
         <div class="emoji-display" id="emoji-hint"></div>
         <div class="slots" id="slots"></div>
         <div class="letters-pool" id="pool"></div>
     </div>
 
     <div id="over-screen">
-        <h1>Time's Up! 🏁</h1>
+        <h1>Game Summary 🏁</h1>
         <p>Your Final Score:</p>
         <div class="big-score" id="final-score">0</div>
-        <button class="cat-btn" onclick="location.reload()" style="background: var(--secondary); color: white; padding: 15px 50px;">Play Again</button>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="cat-btn" onclick="location.reload()" style="background: var(--secondary); color: white; padding: 15px 30px;">Play Again</button>
+            <button class="cat-btn" onclick="location.reload()" style="background: var(--primary); color: white; padding: 15px 30px;">Change Category</button>
+        </div>
     </div>
 
     <script>
         const vocabulary = {
             "Animals": { words: "Dog,Cat,Bird,Fish,Frog,Hippo,Lion,Tiger,Snake,Duck,Bear,Bee,Cow,Goat,Horse,Mouse,Sheep,Spider,Whale", emoji: { "Dog":"🐶","Cat":"🐱","Bird":"🐦","Fish":"🐟","Frog":"🐸","Hippo":"🦛","Lion":"🦁","Tiger":"🐯","Snake":"🐍","Duck":"🦆","Bear":"🐻","Bee":"🐝","Cow":"🐮","Goat":"🐐","Horse":"🐴","Mouse":"🐭","Sheep":"🐑","Spider":"🕷️","Whale":"🐳"} },
-            "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"🦵","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
+            "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"騰","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
             "Clothes": { words: "Bag,Coat,Dress,Hat,Jacket,Jeans,Shoes,Skirt,Socks,Watch", emoji: {"Bag":"👜","Coat":"🧥","Dress":"👗","Hat":"👒","Jacket":"🧥","Jeans":"👖","Shoes":"👞","Skirt":"👗","Socks":"🧦","Watch":"⌚"} },
             "Food": { words: "Apple,Banana,Bread,Burger,Cake,Candy,Carrot,Cheese,Egg,Grape,Juice,Lemon,Milk,Pear,Pizza,Potato,Rice,Soup,Tomato,Water", emoji: {"Apple":"🍎","Banana":"🍌","Bread":"🍞","Burger":"🍔","Cake":"🍰","Candy":"🍬","Carrot":"🥕","Cheese":"🧀","Egg":"🥚","Grape":"🍇","Juice":"🧃","Lemon":"🍋","Milk":"🥛","Pear":"🍐","Pizza":"🍕","Potato":"🥔","Rice":"🍚","Soup":"🥣","Tomato":"🍅","Water":"💧"} },
             "Nature": { words: "Beach,Cloud,Farm,Flower,Leaf,Moon,Mountain,Rain,River,Sea,Sky,Star,Sun,Tree", emoji: {"Beach":"🏖️","Cloud":"☁️","Farm":"🚜","Flower":"🌸","Leaf":"🍃","Moon":"🌙","Mountain":"⛰️","Rain":"🌧️","River":"🏞️","Sea":"🌊","Sky":"🌌","Star":"⭐","Sun":"☀️","Tree":"🌳"} },
@@ -210,7 +216,7 @@
         let currentCategory = "";
         let currentWord = "";
         let charIndex = 0;
-        let recentWords = []; // 记录最近5个单词
+        let recentWords = [];
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playTone(f, d) {
@@ -234,11 +240,17 @@
         }
 
         function startGame(cat) {
+            score = 0;
+            timeLeft = 120;
+            document.getElementById('score').innerText = "0";
             currentCategory = cat;
             document.getElementById('menu-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
             document.getElementById('status-bar').style.display = 'flex';
-            
+    
+            // 清除舊的 timer (防止重複點擊導致計時器疊加)
+            if(timerInterval) clearInterval(timerInterval);
+
             timerInterval = setInterval(() => {
                 timeLeft--;
                 let m = Math.floor(timeLeft / 60);
@@ -250,14 +262,16 @@
             nextWord();
         }
 
+        // 新增的退出函數
+        function quitGame() {
+                endGame();
+        }
+
         function nextWord() {
             const catData = vocabulary[currentCategory];
             const words = catData.words.split(',');
-            
-            // 挑选单词逻辑：避开最近5个单词
             let availableWords = words.filter(w => !recentWords.includes(w.trim().toUpperCase()));
             
-            // 如果所有单词都刚刚出现过（极端情况），则重置记录
             if (availableWords.length === 0) {
                 recentWords = [];
                 availableWords = words;
@@ -265,12 +279,8 @@
 
             let selected = availableWords[Math.floor(Math.random() * availableWords.length)].trim().toUpperCase();
             currentWord = selected;
-
-            // 更新最近记录
             recentWords.push(currentWord);
-            if (recentWords.length > 5) {
-                recentWords.shift(); // 保持队列长度为5
-            }
+            if (recentWords.length > 5) recentWords.shift();
 
             charIndex = 0;
             document.getElementById('emoji-hint').innerText = catData.emoji[currentWord[0] + currentWord.slice(1).toLowerCase()] || "❓";
@@ -298,7 +308,7 @@
                         charIndex++;
                         playTone(600, 0.1);
                         if(charIndex === currentWord.length) {
-                            score += 1; // 1分1题
+                            score += 1;
                             document.getElementById('score').innerText = score;
                             playTone(900, 0.2);
                             setTimeout(nextWord, 600);
