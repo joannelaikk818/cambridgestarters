@@ -15,7 +15,6 @@
         }
 
         body {
-            /* 修正 iPhone 字型問題，優先使用 Chalkboard SE 或系統圓體 */
             font-family: 'Chalkboard SE', 'Quicksand', 'Comic Sans MS', cursive, sans-serif;
             background-color: var(--bg);
             margin: 0;
@@ -27,10 +26,7 @@
             user-select: none;
         }
 
-        /* 確保所有按鈕不會跑掉 */
-        button {
-            font-family: inherit;
-        }
+        button { font-family: inherit; touch-action: manipulation; }
 
         #status-bar {
             display: none;
@@ -50,11 +46,7 @@
             font-weight: bold;
         }
 
-        #menu-screen {
-            padding: 40px 20px;
-            text-align: center;
-            max-width: 800px;
-        }
+        #menu-screen { padding: 40px 20px; text-align: center; max-width: 800px; }
 
         .category-grid {
             display: grid;
@@ -98,13 +90,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        .slots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
+        .slots { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
 
         .slot {
             width: 45px;
@@ -116,19 +102,12 @@
             text-transform: uppercase;
         }
 
-        .letters-pool {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 30px;
-        }
+        .letters-pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
 
         .letter-tile {
             width: 55px;
             height: 55px;
             background: white;
-            border: 3px solid transparent;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -140,11 +119,7 @@
             transition: all 0.1s;
         }
 
-        .wrong {
-            border-color: var(--error) !important;
-            animation: shake 0.3s ease-in-out;
-            color: var(--error);
-        }
+        .wrong { border: 3px solid var(--error) !important; animation: shake 0.3s ease-in-out; color: var(--error); }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -152,18 +127,9 @@
             75% { transform: translateX(6px); }
         }
 
-        .hidden-tile {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.5);
-        }
+        .hidden-tile { opacity: 0; pointer-events: none; transform: scale(0.5); }
 
-        #over-screen {
-            display: none;
-            text-align: center;
-            padding: 50px;
-        }
-
+        #over-screen { display: none; text-align: center; padding: 50px; }
         .big-score { font-size: 5rem; color: var(--primary); margin: 20px 0; text-shadow: 3px 3px #fff; }
     </style>
 </head>
@@ -176,13 +142,12 @@
 
     <div id="menu-screen">
         <h1 style="color: var(--primary); font-size: 2.5rem;">Spelling Starters 🐾</h1>
-        <p>You have 2 minutes! Choose a topic:</p>
         <div class="category-grid" id="category-grid"></div>
     </div>
 
     <div id="game-screen">
-        <button class="cat-btn" onclick="quitGame()" style="background: var(--error); color: white; padding: 10px 20px; font-size: 0.9rem; margin-bottom: 15px; box-shadow: 0 4px 0 #b33; min-width: 120px;">
-            Quit & Score 🚩
+        <button class="cat-btn" onclick="quitGame()" style="background: var(--error); color: white; padding: 10px 20px; font-size: 0.9rem; margin-bottom: 15px; box-shadow: 0 4px 0 #b33;">
+            Quit 🚩
         </button>
         <div class="emoji-display" id="emoji-hint"></div>
         <div class="slots" id="slots"></div>
@@ -191,42 +156,26 @@
 
     <div id="over-screen">
         <h1>Game Summary 🏁</h1>
-        <p>Your Final Score:</p>
         <div class="big-score" id="final-score">0</div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button class="cat-btn" onclick="location.reload()" style="background: var(--secondary); color: white; padding: 15px 30px;">Play Again</button>
-            <button class="cat-btn" onclick="location.reload()" style="background: var(--primary); color: white; padding: 15px 30px;">Change Category</button>
-        </div>
+        <button class="cat-btn" onclick="location.reload()" style="background: var(--secondary); color: white; padding: 15px 30px;">Play Again</button>
     </div>
 
     <script>
         const vocabulary = {
             "Animals": { words: "Dog,Cat,Bird,Fish,Frog,Hippo,Lion,Tiger,Snake,Duck,Bear,Bee,Cow,Goat,Horse,Mouse,Sheep,Spider,Whale", emoji: { "Dog":"🐶","Cat":"🐱","Bird":"🐦","Fish":"🐟","Frog":"🐸","Hippo":"🦛","Lion":"🦁","Tiger":"🐯","Snake":"🐍","Duck":"🦆","Bear":"🐻","Bee":"🐝","Cow":"🐮","Goat":"🐐","Horse":"🐴","Mouse":"🐭","Sheep":"🐑","Spider":"🕷️","Whale":"🐳"} },
-            "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"騰","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
+            "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"🦵","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
             "Clothes": { words: "Bag,Coat,Dress,Hat,Jacket,Jeans,Shoes,Skirt,Socks,Watch", emoji: {"Bag":"👜","Coat":"🧥","Dress":"👗","Hat":"👒","Jacket":"🧥","Jeans":"👖","Shoes":"👞","Skirt":"👗","Socks":"🧦","Watch":"⌚"} },
-            "Food": { words: "Apple,Banana,Bread,Burger,Cake,Candy,Carrot,Cheese,Egg,Grape,Juice,Lemon,Milk,Pear,Pizza,Potato,Rice,Soup,Tomato,Water", emoji: {"Apple":"🍎","Banana":"🍌","Bread":"🍞","Burger":"🍔","Cake":"🍰","Candy":"🍬","Carrot":"🥕","Cheese":"🧀","Egg":"🥚","Grape":"🍇","Juice":"🧃","Lemon":"🍋","Milk":"🥛","Pear":"🍐","Pizza":"🍕","Potato":"🥔","Rice":"🍚","Soup":"🥣","Tomato":"🍅","Water":"💧"} },
+            "Food": { words: "Apple,Banana,Bread,Burger,Cake,Candy,Carrot,Cheese,Egg,Grape,Juice,Lemon,Milk,Pear,Pizza,Potato,Rice,Soup,Tomato,Water", emoji: {"Apple":"🍎","Banana":"🍌","Bread":"🍞","Burger":"🍔","Cake":"🍰","Candy":"🍬","Carrot":"🥕","Cheese":"🧀","Egg":"🥚","Grape":"🍇","Juice":"🧃","Lemon":"🍋","Milk":"輕鬆","Pear":"🍐","Pizza":"🍕","Potato":"🥔","Rice":"🍚","Soup":"🥣","Tomato":"🍅","Water":"💧"} },
             "Nature": { words: "Beach,Cloud,Farm,Flower,Leaf,Moon,Mountain,Rain,River,Sea,Sky,Star,Sun,Tree", emoji: {"Beach":"🏖️","Cloud":"☁️","Farm":"🚜","Flower":"🌸","Leaf":"🍃","Moon":"🌙","Mountain":"⛰️","Rain":"🌧️","River":"🏞️","Sea":"🌊","Sky":"🌌","Star":"⭐","Sun":"☀️","Tree":"🌳"} },
             "Transport": { words: "Bike,Boat,Bus,Car,Plane,Train,Truck", emoji: {"Bike":"🚲","Boat":"⛵","Bus":"🚌","Car":"🚗","Plane":"✈️","Train":"🚆","Truck":"🚚"} },
             "School": { words: "Book,Class,Desk,Eraser,Pen,Pencil,Picture,Ruler", emoji: {"Book":"📖","Class":"🏫","Desk":"🪑","Eraser":"🧼","Pen":"🖊️","Pencil":"✏️","Picture":"🖼️","Ruler":"📏"} }
         };
 
-        let score = 0;
-        let timeLeft = 120;
-        let timerInterval;
-        let currentCategory = "";
-        let currentWord = "";
-        let charIndex = 0;
-        let recentWords = [];
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let score = 0, timeLeft = 120, timerInterval;
+        let currentCategory = "", currentWord = "", charIndex = 0;
+        let recentWords = [], mistakes = 0, isWaiting = false;
 
-        function playTone(f, d) {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.frequency.value = f;
-            g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        }
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function setup() {
             const grid = document.getElementById('category-grid');
@@ -240,45 +189,31 @@
         }
 
         function startGame(cat) {
-            score = 0;
-            timeLeft = 120;
-            document.getElementById('score').innerText = "0";
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             currentCategory = cat;
+            score = 0; timeLeft = 120;
             document.getElementById('menu-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
             document.getElementById('status-bar').style.display = 'flex';
-    
-            // 清除舊的 timer (防止重複點擊導致計時器疊加)
-            if(timerInterval) clearInterval(timerInterval);
-
+            
             timerInterval = setInterval(() => {
                 timeLeft--;
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
+                let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
                 document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
                 if(timeLeft <= 0) endGame();
             }, 1000);
-            
             nextWord();
         }
 
-        // 新增的退出函數
-        function quitGame() {
-                endGame();
-        }
-
         function nextWord() {
+            isWaiting = false;
+            mistakes = 0;
             const catData = vocabulary[currentCategory];
             const words = catData.words.split(',');
-            let availableWords = words.filter(w => !recentWords.includes(w.trim().toUpperCase()));
-            
-            if (availableWords.length === 0) {
-                recentWords = [];
-                availableWords = words;
-            }
+            let available = words.filter(w => !recentWords.includes(w.trim().toUpperCase()));
+            if (available.length === 0) { recentWords = []; available = words; }
 
-            let selected = availableWords[Math.floor(Math.random() * availableWords.length)].trim().toUpperCase();
-            currentWord = selected;
+            currentWord = available[Math.floor(Math.random() * available.length)].trim().toUpperCase();
             recentWords.push(currentWord);
             if (recentWords.length > 5) recentWords.shift();
 
@@ -297,31 +232,66 @@
             const pool = document.getElementById('pool');
             pool.innerHTML = '';
             let letters = currentWord.split('').sort(() => Math.random() - 0.5);
-            letters.forEach(l => {
+            letters.forEach((l, idx) => {
                 const tile = document.createElement('div');
                 tile.className = 'letter-tile';
                 tile.innerText = l;
-                tile.onclick = () => {
-                    if(l === currentWord[charIndex]) {
-                        document.getElementById('s-' + charIndex).innerText = l;
-                        tile.classList.add('hidden-tile');
-                        charIndex++;
-                        playTone(600, 0.1);
-                        if(charIndex === currentWord.length) {
-                            score += 1;
-                            document.getElementById('score').innerText = score;
-                            playTone(900, 0.2);
-                            setTimeout(nextWord, 600);
-                        }
-                    } else {
-                        playTone(150, 0.2);
-                        tile.classList.add('wrong');
-                        setTimeout(() => tile.classList.remove('wrong'), 400);
-                    }
-                };
+                tile.onclick = () => handleInput(l, tile);
                 pool.appendChild(tile);
             });
         }
+
+        function handleInput(l, tile) {
+            if (isWaiting) return;
+
+            if (l === currentWord[charIndex]) {
+                document.getElementById('s-' + charIndex).innerText = l;
+                tile.classList.add('hidden-tile');
+                charIndex++;
+                if (charIndex === currentWord.length) {
+                    score += 5;
+                    finishWord();
+                }
+            } else {
+                mistakes++;
+                score = Math.max(0, score - 1);
+                document.getElementById('score').innerText = score;
+                tile.classList.add('wrong');
+                setTimeout(() => tile.classList.remove('wrong'), 400);
+
+                if (mistakes >= 5) {
+                    // Show correct answer in red
+                    for (let i = charIndex; i < currentWord.length; i++) {
+                        const s = document.getElementById('s-' + i);
+                        s.innerText = currentWord[i];
+                        s.style.color = "var(--error)";
+                    }
+                    finishWord();
+                }
+            }
+            document.getElementById('score').innerText = score;
+        }
+
+        function finishWord() {
+            isWaiting = true;
+            // 1. Only pronounce the full word, not individual letters
+            const msg = new SpeechSynthesisUtterance(currentWord);
+            msg.lang = 'en-US';
+            
+            // 2. Fix skipping: Wait for speech to finish BEFORE calling nextWord
+            msg.onend = () => {
+                setTimeout(nextWord, 500); 
+            };
+            
+            // If speech synthesis fails/not supported, fallback to move next
+            if (!window.speechSynthesis) {
+                setTimeout(nextWord, 1000);
+            } else {
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        function quitGame() { endGame(); }
 
         function endGame() {
             clearInterval(timerInterval);
