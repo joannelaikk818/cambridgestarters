@@ -142,6 +142,7 @@
 
     <div id="menu-screen">
         <h1 style="color: var(--primary); font-size: 2.5rem;">Spelling Starters 🐾</h1>
+     <p>You have 2 minutes! Choose a topic:</p>
         <div class="category-grid" id="category-grid"></div>
     </div>
 
@@ -162,13 +163,30 @@
 
     <script>
         const vocabulary = {
-            "Animals": { words: "Dog,Cat,Bird,Fish,Frog,Hippo,Lion,Tiger,Snake,Duck,Bear,Bee,Cow,Goat,Horse,Mouse,Sheep,Spider,Whale", emoji: { "Dog":"🐶","Cat":"🐱","Bird":"🐦","Fish":"🐟","Frog":"🐸","Hippo":"🦛","Lion":"🦁","Tiger":"🐯","Snake":"🐍","Duck":"🦆","Bear":"🐻","Bee":"🐝","Cow":"🐮","Goat":"🐐","Horse":"🐴","Mouse":"🐭","Sheep":"🐑","Spider":"🕷️","Whale":"🐳"} },
+            "Color": { 
+                words: "black,blue,brown,color,green,grey,gray,orange,pink,purple,red,white,yellow", 
+                emoji: {"black":"⬛","blue":"🟦","brown":"🟫","color":"🎨","green":"🟩","grey":"⬜","gray":"⬜","orange":"🟧","pink":"🌸","purple":"🟪","red":"🟥","white":"⬜","yellow":"🟨"} 
+            },
+            "Animal": { 
+                words: "animal,bear,bee,bird,cat,chicken,cow,crocodile,dog,donkey,duck,elephant,fish,frog,giraffe,goat,hippo,horse,jellyfish,lizard,mouse,mice,monkey,pet,polar bear,sheep,snake,spider,tail,tiger,zebra,zoo", 
+                emoji: {"animal":"🐾","bear":"🐻","bee":"🐝","bird":"🐦","cat":"🐱","chicken":"🐔","cow":"🐮","crocodile":"🐊","dog":"🐶","donkey":"🫏","duck":"🦆","elephant":"🐘","fish":"🐟","frog":"🐸","giraffe":"🦒","goat":"🐐","hippo":"🦛","horse":"🐴","jellyfish":"🪼","lizard":"🦎","mouse":"🐭","mice":"🖱️","monkey":"🐒","pet":"🐕","polar bear":"🐻‍❄️","sheep":"🐑","snake":"🐍","spider":"🕷️","tail":"🐒","tiger":"🐯","zebra":"🦓","zoo":"🏠"} 
+            },
             "Body": { words: "Arm,Ear,Eye,Face,Foot,Hair,Hand,Head,Leg,Mouth,Nose,Tail", emoji: {"Arm":"💪","Ear":"👂","Eye":"👁️","Face":"😊","Foot":"🦶","Hair":"💇","Hand":"✋","Head":"👤","Leg":"🦵","Mouth":"👄","Nose":"👃","Tail":"🐒"} },
-            "Clothes": { words: "Bag,Coat,Dress,Hat,Jacket,Jeans,Shoes,Skirt,Socks,Watch", emoji: {"Bag":"👜","Coat":"🧥","Dress":"👗","Hat":"👒","Jacket":"🧥","Jeans":"👖","Shoes":"👞","Skirt":"👗","Socks":"🧦","Watch":"⌚"} },
+"Clothes": { words: "Bag,Coat,Dress,Hat,Jacket,Jeans,Shoes,Skirt,Socks,Watch", emoji: {"Bag":"👜","Coat":"🧥","Dress":"👗","Hat":"👒","Jacket":"🧥","Jeans":"👖","Shoes":"👞","Skirt":"👗","Socks":"🧦","Watch":"⌚"} },
             "Food": { words: "Apple,Banana,Bread,Burger,Cake,Candy,Carrot,Cheese,Egg,Grape,Juice,Lemon,Milk,Pear,Pizza,Potato,Rice,Soup,Tomato,Water", emoji: {"Apple":"🍎","Banana":"🍌","Bread":"🍞","Burger":"🍔","Cake":"🍰","Candy":"🍬","Carrot":"🥕","Cheese":"🧀","Egg":"🥚","Grape":"🍇","Juice":"🧃","Lemon":"🍋","Milk":"輕鬆","Pear":"🍐","Pizza":"🍕","Potato":"🥔","Rice":"🍚","Soup":"🥣","Tomato":"🍅","Water":"💧"} },
             "Nature": { words: "Beach,Cloud,Farm,Flower,Leaf,Moon,Mountain,Rain,River,Sea,Sky,Star,Sun,Tree", emoji: {"Beach":"🏖️","Cloud":"☁️","Farm":"🚜","Flower":"🌸","Leaf":"🍃","Moon":"🌙","Mountain":"⛰️","Rain":"🌧️","River":"🏞️","Sea":"🌊","Sky":"🌌","Star":"⭐","Sun":"☀️","Tree":"🌳"} },
-            "Transport": { words: "Bike,Boat,Bus,Car,Plane,Train,Truck", emoji: {"Bike":"🚲","Boat":"⛵","Bus":"🚌","Car":"🚗","Plane":"✈️","Train":"🚆","Truck":"🚚"} },
-            "School": { words: "Book,Class,Desk,Eraser,Pen,Pencil,Picture,Ruler", emoji: {"Book":"📖","Class":"🏫","Desk":"🪑","Eraser":"🧼","Pen":"🖊️","Pencil":"✏️","Picture":"🖼️","Ruler":"📏"} }
+            "School": { 
+                words: "board,book,bookcase,class,classroom,computer,crayon,cupboard,desk,door,keyboard,mouse,paper,pen,pencil,picture,playground,poster,rubber,eraser,ruler,school,teacher,wall,window", 
+                emoji: {"board":"📋","book":"📖","bookcase":"📚","class":"🏫","classroom":"🏫","computer":"💻","crayon":"🖍️","cupboard":"🚪","desk":"🪑","door":"🚪","keyboard":"⌨️","mouse":"🖱️","paper":"📄","pen":"🖊️","pencil":"✏️","picture":"🖼️","playground":"🛝","poster":"🖼️","rubber":"🧼","eraser":"🧼","ruler":"📏","school":"🏫","teacher":"👩‍🏫","wall":"🧱","window":"🪟"} 
+            },
+            "Transport": { 
+                words: "bike,boat,bus,car,drive,helicopter,lorry,truck,plane,ship,train", 
+                emoji: {"bike":"🚲","boat":"⛵","bus":"🚌","car":"🚗","drive":"🚗","helicopter":"🚁","lorry":"🚛","truck":"🚚","plane":"✈️","ship":"🚢","train":"🚆"} 
+            },
+            "Family": { 
+                words: "baby,boy,brother,child,children,classmate,cousin,father,dad,family,mother,mum,friend,girl,grandpa,grandfather,grandmother,grandma,kid,man,men,old,sister,woman,women,young", 
+                emoji: {"baby":"👶","boy":"👦","brother":"👦","child":"🧒","children":"👭","classmate":"🧑‍🎓","cousin":"🧒","father":"👨","dad":"👨","family":"👨‍👩‍👧","mother":"👩","mum":"👩","friend":"🤝","girl":"👧","grandpa":"👴","grandfather":"👴","grandmother":"👵","grandma":"👵","kid":"🧒","man":"👨","men":"👨‍👨","old":"👴","sister":"👧","woman":"👩","women":"👩‍👩","young":"🧒"} 
+            }
         };
 
         let score = 0, timeLeft = 120, timerInterval;
@@ -192,6 +210,7 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
             currentCategory = cat;
             score = 0; timeLeft = 120;
+            recentWords = []; // Reset history for new session
             document.getElementById('menu-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
             document.getElementById('status-bar').style.display = 'flex';
@@ -209,20 +228,36 @@
             isWaiting = false;
             mistakes = 0;
             const catData = vocabulary[currentCategory];
-            const words = catData.words.split(',');
-            let available = words.filter(w => !recentWords.includes(w.trim().toUpperCase()));
-            if (available.length === 0) { recentWords = []; available = words; }
+            const words = catData.words.split(',').map(w => w.trim().toUpperCase());
+            
+            // 1. Logic to not repeat words within 10 questions
+            let available = words.filter(w => !recentWords.includes(w));
+            
+            // If we run out of words or category is small, clear oldest history
+            if (available.length === 0) { 
+                recentWords = []; 
+                available = words; 
+            }
 
-            currentWord = available[Math.floor(Math.random() * available.length)].trim().toUpperCase();
+            currentWord = available[Math.floor(Math.random() * available.length)];
+            
+            // Manage history (keep last 10)
             recentWords.push(currentWord);
-            if (recentWords.length > 5) recentWords.shift();
+            if (recentWords.length > 10) recentWords.shift();
 
             charIndex = 0;
-            document.getElementById('emoji-hint').innerText = catData.emoji[currentWord[0] + currentWord.slice(1).toLowerCase()] || "❓";
+            // Handle multi-word emoji matching (e.g., polar bear)
+            let emojiKey = currentWord.toLowerCase();
+            document.getElementById('emoji-hint').innerText = catData.emoji[emojiKey] || "❓";
             
             const slots = document.getElementById('slots');
             slots.innerHTML = '';
-            for(let i=0; i<currentWord.length; i++) {
+            
+            // Filter out spaces for the "slots" (e.g. for "polar bear")
+            let displayChars = currentWord.replace(/\s/g, ''); 
+            currentWordNoSpace = displayChars;
+
+            for(let i=0; i < displayChars.length; i++) {
                 const s = document.createElement('div');
                 s.className = 'slot';
                 s.id = 's-' + i;
@@ -231,8 +266,8 @@
 
             const pool = document.getElementById('pool');
             pool.innerHTML = '';
-            let letters = currentWord.split('').sort(() => Math.random() - 0.5);
-            letters.forEach((l, idx) => {
+            let letters = displayChars.split('').sort(() => Math.random() - 0.5);
+            letters.forEach((l) => {
                 const tile = document.createElement('div');
                 tile.className = 'letter-tile';
                 tile.innerText = l;
@@ -244,11 +279,11 @@
         function handleInput(l, tile) {
             if (isWaiting) return;
 
-            if (l === currentWord[charIndex]) {
+            if (l === currentWordNoSpace[charIndex]) {
                 document.getElementById('s-' + charIndex).innerText = l;
                 tile.classList.add('hidden-tile');
                 charIndex++;
-                if (charIndex === currentWord.length) {
+                if (charIndex === currentWordNoSpace.length) {
                     score += 5;
                     finishWord();
                 }
@@ -260,10 +295,9 @@
                 setTimeout(() => tile.classList.remove('wrong'), 400);
 
                 if (mistakes >= 5) {
-                    // Show correct answer in red
-                    for (let i = charIndex; i < currentWord.length; i++) {
+                    for (let i = charIndex; i < currentWordNoSpace.length; i++) {
                         const s = document.getElementById('s-' + i);
-                        s.innerText = currentWord[i];
+                        s.innerText = currentWordNoSpace[i];
                         s.style.color = "var(--error)";
                     }
                     finishWord();
@@ -274,16 +308,13 @@
 
         function finishWord() {
             isWaiting = true;
-            // 1. Only pronounce the full word, not individual letters
-            const msg = new SpeechSynthesisUtterance(currentWord);
+            const msg = new SpeechSynthesisUtterance(currentWord.toLowerCase());
             msg.lang = 'en-US';
             
-            // 2. Fix skipping: Wait for speech to finish BEFORE calling nextWord
             msg.onend = () => {
                 setTimeout(nextWord, 500); 
             };
             
-            // If speech synthesis fails/not supported, fallback to move next
             if (!window.speechSynthesis) {
                 setTimeout(nextWord, 1000);
             } else {
